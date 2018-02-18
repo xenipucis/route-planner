@@ -11,6 +11,6 @@
 
 
 	<Environment name="spring.config.location"
-		value="file:${catalina.home}/conf/ers/application.yml" type="java.lang.String" />
+		value="file:${catalina.home}/conf/rp/application.yml" type="java.lang.String" />
 </Context>
 
