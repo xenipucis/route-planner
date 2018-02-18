@@ -8,8 +8,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
-	<name>Configuration Manager</name>
-	<description>A demo Route Planner project for Ryanair</description>
+	<name>${project.artifactId}</name>
+	<description>A Route Planner demo project for Ryanair</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -48,6 +48,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
+            <!--<scope>provided</scope>-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -58,21 +59,12 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+        <!-- hot swapping, disable cache for template, enable live reload -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-yaml</artifactId>
-		</dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -85,14 +77,6 @@
             <artifactId>spring-retry</artifactId>
             <version>${spring.retry.version}</version>
         </dependency>
-
-		<!-- Bean Validation API support -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>${validation.api.version}</version>
-			<scope>provided</scope>
-		</dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -139,6 +123,8 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+                    <!-- this will get rid of version info from war file name -->
+                    <finalName>${project.artifactId}</finalName>
 					<excludes>
 						<exclusion>
 							<groupId>org.springframework.boot</groupId>
