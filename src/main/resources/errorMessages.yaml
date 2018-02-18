@@ -31,11 +31,11 @@ errors:
       internalCode: 1001
       shortMessage: Invalid format of Arrival Time.
       detailedMessage: Arrival Time is in invalid format. Use dates in the same format such as '2018-03-01T07:00'.
-    DEPARTURE_TIME_AFTER_ARRIVAL_TIME:
+    DEPARTURE_TIME_UTC_AFTER_ARRIVAL_TIME_UTC:
       status: 400
       internalCode: 1002
-      shortMessage: Departure Time is after Arrival Time.
-      detailedMessage: Please specify a Departure Time before Arrival Time.
+      shortMessage: Departure DateTime in Utc is after Arrival DateTime in Utc.
+      detailedMessage: Please specify a Departure Time in Utc before Arrival Time in Utc.
     DEPARTURE_NOT_IATA_CODE:
       status: 400
       internalCode: 1003

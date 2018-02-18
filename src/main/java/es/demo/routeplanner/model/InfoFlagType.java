@@ -1,9 +1,7 @@
 package es.demo.routeplanner.model;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public enum InfoFlagType {
@@ -27,8 +25,7 @@ public enum InfoFlagType {
     }
 
     public static int generateValue(final List<InfoFlagType> infoFlagTypes) {
-        final Set<InfoFlagType> infoFlagTypesSet = new HashSet<>(infoFlagTypes);
-        return infoFlagTypes.stream().mapToInt(infoFlagType -> infoFlagType.getValue()).sum();
+        return infoFlagTypes.stream().mapToInt(InfoFlagType::getValue).sum();
     }
 
     public static boolean containsBothFromAndTo(final int value) {

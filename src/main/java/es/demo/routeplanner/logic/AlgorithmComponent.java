@@ -3,7 +3,6 @@ package es.demo.routeplanner.logic;
 import es.demo.routeplanner.configuration.RoutePlannerPropertiesConfiguration;
 import es.demo.routeplanner.dto.*;
 import es.demo.routeplanner.model.InfoFlagType;
-import es.demo.routeplanner.model.RoutesInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class AlgorithmComponent {
         this.routePlannerPropertiesConfiguration = routePlannerPropertiesConfiguration;
     }
 
-    public Map<String, RoutesInfo> computeInfoPerAirportIataCodesOfConnectionNode(final String airportFrom, final String airportTo) {
+    public Map<String, Integer> computeInfoPerAirportIataCodesOfConnectionNode(final String airportFrom, final String airportTo) {
         LOGGER.debug("airportFrom = {}, airportTo = {}", airportFrom, airportTo);
         final Predicate<Route> noCountryAirportPredicate = route -> route != null && route.getConnectingAirport() == null;
         final Predicate<Route> airportFromEqualityPredicate = route -> route != null && airportFrom.equals(route.getAirportFrom());
@@ -48,31 +47,21 @@ public class AlgorithmComponent {
                 .collect(Collectors.toSet());
         LOGGER.debug("Initial possible routes size: {}", possibleRoutes.size());
 
-        final Map<String, RoutesInfo> infoPerAirportCodesOfConnectionNode = new HashMap<>();
+        final Map<String, Integer> infoPerAirportCodesOfConnectionNode = new HashMap<>();
 
         for (Route route : possibleRoutes) {
             if (airportFrom.equals(route.getAirportFrom()) && airportTo.equals(route.getAirportTo())) {
-                infoPerAirportCodesOfConnectionNode.put(airportFrom, new RoutesInfo().value(InfoFlagType.FROM_EQUAL_TO.getValue()));
+                infoPerAirportCodesOfConnectionNode.put(airportFrom, InfoFlagType.FROM_EQUAL_TO.getValue());
             } else if (airportFrom.equals(route.getAirportFrom())) {
                 final String airportToCode = route.getAirportTo();
-                final RoutesInfo routesInfo = infoPerAirportCodesOfConnectionNode.get(airportToCode);
+                final Integer routesInfo = infoPerAirportCodesOfConnectionNode.get(airportToCode);
                 final Integer valueToUpdate = InfoFlagType.TO.getValue();
-                if (routesInfo == null) {
-                    infoPerAirportCodesOfConnectionNode.put(airportToCode, new RoutesInfo().value(valueToUpdate).routeTo(route));
-                } else {
-                    routesInfo.setValue(routesInfo.getValue() + valueToUpdate);
-                    routesInfo.setRouteTo(route);
-                }
+                infoPerAirportCodesOfConnectionNode.put(airportToCode, routesInfo == null ? valueToUpdate : routesInfo + valueToUpdate);
             } else if (airportTo.equals(route.getAirportTo())) {
                 final String airportFromCode = route.getAirportFrom();
-                final RoutesInfo routesInfo = infoPerAirportCodesOfConnectionNode.get(airportFromCode);
+                final Integer routesInfo = infoPerAirportCodesOfConnectionNode.get(airportFromCode);
                 final Integer valueToUpdate = InfoFlagType.FROM.getValue();
-                if (routesInfo == null) {
-                    infoPerAirportCodesOfConnectionNode.put(airportFromCode, new RoutesInfo().value(valueToUpdate).routeFrom(route));
-                } else {
-                    routesInfo.setValue(routesInfo.getValue() + valueToUpdate);
-                    routesInfo.setRouteFrom(route);
-                }
+                infoPerAirportCodesOfConnectionNode.put(airportFromCode, routesInfo == null ? valueToUpdate : routesInfo + valueToUpdate);
             }
         }
 
@@ -82,7 +71,7 @@ public class AlgorithmComponent {
                 infoPerAirportCodesOfConnectionNode
                 .keySet()
                 .stream()
-                .filter(connection -> infoPerAirportCodesOfConnectionNode.get(connection).getValue() == valueForRoutesWithFromTo)
+                .filter(connection -> infoPerAirportCodesOfConnectionNode.get(connection) == valueForRoutesWithFromTo)
                 .collect(Collectors.toList());
         LOGGER.debug("Final Possible routes size after second filter (keys in map with value = {}): {}"
                 , valueForRoutesWithFromTo
@@ -98,7 +87,7 @@ public class AlgorithmComponent {
             , final LocalDateTime arrivalTime
             , final Integer minimumDifferenceInHours
             , final Integer limitPerPage
-            , final Map<String, RoutesInfo> infoPerAirportCodesOfConnectionNode) {
+            , final Map<String, Integer> infoPerAirportCodesOfConnectionNode) {
 
         LOGGER.debug("departure = {}, arrival = {}, departureTime = {}, arrivalTime = {}, minimumDifferenceInHours = {}, limitPerPage = {} "
                 , departure
@@ -140,7 +129,7 @@ public class AlgorithmComponent {
             , final String arrival
             , final LocalDateTime departureTime
             , final LocalDateTime arrivalTime
-            , final Map<String, RoutesInfo> infoPerAirportCodesOfConnectionNode
+            , final Map<String, Integer> infoPerAirportCodesOfConnectionNode
     ) {
         LOGGER.debug("travels.size = {}, departure = {}, arrival = {}, departureTime = {}, arrivalTime = {}, limitPerPage = {}"
                 , travels.size()
@@ -150,7 +139,7 @@ public class AlgorithmComponent {
                 , arrivalTime
                 , limitPerPage);
 
-        boolean directFlightsExist = infoPerAirportCodesOfConnectionNode.values().stream().anyMatch(key -> InfoFlagType.fromAndToAreEqual(key.getValue()));
+        boolean directFlightsExist = infoPerAirportCodesOfConnectionNode.values().stream().anyMatch(InfoFlagType::fromAndToAreEqual);
         LOGGER.debug("Direct Flights between departure = {} and arrival = {} exist: {}", departure, arrival, directFlightsExist);
 
         if (directFlightsExist) {
@@ -173,7 +162,7 @@ public class AlgorithmComponent {
             , final LocalDateTime departureTime
             , final LocalDateTime arrivalTime
             , final Integer minimumDifferenceInHours
-            , final Map<String, RoutesInfo> infoPerAirportCodesOfConnectionNode) {
+            , final Map<String, Integer> infoPerAirportCodesOfConnectionNode) {
         LOGGER.debug("limitPerPage = {}, departure = {}, arrival = {}, departureTime = {}, arrivalTime = {}, minimumDifferenceInHours = {}"
             , limitPerPage
             , departure
@@ -187,9 +176,9 @@ public class AlgorithmComponent {
                 break;
             }
 
-            final RoutesInfo routesInfo = infoPerAirportCodesOfConnectionNode.get(connectionAirportCode);
+            final Integer routesInfo = infoPerAirportCodesOfConnectionNode.get(connectionAirportCode);
             if (routesInfo != null) {
-                if (InfoFlagType.containsBothFromAndTo(routesInfo.getValue())) {
+                if (InfoFlagType.containsBothFromAndTo(routesInfo)) {
                     LOGGER.debug("Processing connection = {}.", connectionAirportCode);
                     final Set<Travel> firstSegmentTravelsSet = computeSingleTravels(
                             departure

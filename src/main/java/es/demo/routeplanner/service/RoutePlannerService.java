@@ -1,13 +1,11 @@
 package es.demo.routeplanner.service;
 
-import es.demo.routeplanner.configuration.RoutePlannerPropertiesConfiguration;
 import es.demo.routeplanner.dto.*;
 import es.demo.routeplanner.logic.AlgorithmComponent;
 import es.demo.routeplanner.logic.ClientRestServices;
 import es.demo.routeplanner.logic.ErrorManager;
 import es.demo.routeplanner.model.CustomException;
 import es.demo.routeplanner.model.ErrorType;
-import es.demo.routeplanner.model.RoutesInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -53,7 +51,7 @@ public class RoutePlannerService {
             , departure, arrival, departureTime, arrivalTime, minimumDifferenceInHours, limitPerPage);
 
         LOGGER.debug("Building Map with all possible routes, according to: {} call.", ClientRestServices.ROUTES_URI);
-        final Map<String, RoutesInfo> infoPerAirportIataCodesOfConnectionNode = algorithmComponent.computeInfoPerAirportIataCodesOfConnectionNode(departure, arrival);
+        final Map<String, Integer> infoPerAirportIataCodesOfConnectionNode = algorithmComponent.computeInfoPerAirportIataCodesOfConnectionNode(departure, arrival);
         LOGGER.debug("Success in Building Map with all possible routes, according to: {} call. Map is {}", ClientRestServices.ROUTES_URI, infoPerAirportIataCodesOfConnectionNode);
 
         return algorithmComponent.computeTravels(
