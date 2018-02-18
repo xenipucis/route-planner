@@ -1,0 +1,50 @@
+errors:
+  generic:
+    INTERNAL_SERVER_ERROR:
+      status: 500
+      internalCode: 1
+      shortMessage: Internal Server Error
+      detailedMessage: Internal Server Error. Please try again later.
+    BAD_REQUEST_ERROR:
+      status: 400
+      internalCode: 2
+      shortMessage: Invalid Parameters
+      detailedMessage: Invalid Parameters
+    RESOURCE_NOT_FOUND_ERROR:
+      status: 404
+      internalCode: 3
+      shortMessage: Not found
+      detailedMessage: The server has not found anything matching the Request-URI.
+    NOT_SUPPORTED_ERROR:
+      status: 415
+      internalCode: 4
+      shortMessage: Unsupported Media Type
+      detailedMessage: Media Type is not supported.
+  custom:
+    DEPARTURE_TIME_INVALID_FORMAT:
+      status: 400
+      internalCode: 1000
+      shortMessage: Invalid format of Departure Time.
+      detailedMessage: Departure Time is in invalid format. Use dates in the same format such as '2018-03-01T07:00'.
+    ARRIVAL_TIME_INVALID_FORMAT:
+      status: 400
+      internalCode: 1001
+      shortMessage: Invalid format of Arrival Time.
+      detailedMessage: Arrival Time is in invalid format. Use dates in the same format such as '2018-03-01T07:00'.
+    DEPARTURE_TIME_AFTER_ARRIVAL_TIME:
+      status: 400
+      internalCode: 1002
+      shortMessage: Departure Time is after Arrival Time.
+      detailedMessage: Please specify a Departure Time before Arrival Time.
+    DEPARTURE_NOT_IATA_CODE:
+      status: 400
+      internalCode: 1003
+      shortMessage: Departure Airport is not a valid IATA Code.
+      detailedMessage: Please use an IATA airport code, such as 'MAD', 'ALC'.
+    ARRIVAL_NOT_IATA_CODE:
+      status: 400
+      internalCode: 1004
+      shortMessage: Arrival Airport is not a valid IATA Code.
+      detailedMessage: Please use an IATA airport code, such as 'MAD', 'ALC'.
+
+

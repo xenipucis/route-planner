@@ -1,0 +1,154 @@
+swagger: "2.0"
+info:
+  description: "The API of RoutePlanner Demo for Ryanair"
+  version: "1.0.0"
+  title: "Route Planner API Demo"
+  #termsOfService: ""
+  contact:
+    name: "Tiberiu Carp"
+    email: "carp_tiby@ymail.com"
+    #url: ""
+host: 127.0.0.1:8080
+basePath: /routeplanner/api/v1
+tags:
+- name: "Route Planning"
+  description: "Route Planning Description"
+schemes:
+  - http
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /interconnections:
+    get:
+      tags:
+      - "Route Planning"
+      summary: "Get all Travels."
+      description: "Get all Travels.\n..."
+      parameters:
+        - in: "query"
+          name: "departure"
+          description: "Departure IATA Airport Code, such as 'DUB'."
+          required: true
+          type: "string"
+          format: "IATA Airport Code Standard."
+        - in: "query"
+          name: "arrival"
+          description: "Arrival IATA Airport Code, such as 'ALC'."
+          required: true
+          type: "string"
+          format: "IATA Airport Code Standard."
+        - in: "query"
+          name: "departureDateTime"
+          description: "Departure DateTime as Local DateTime of Departure, such as '2018-03-01T07:00'."
+          required: true
+          type: "string"
+          format: "yyyy-MM-ddTHH:mm"
+        - in: "query"
+          name: "arrivalDateTime"
+          description: "Arrival DateTime as Local DateTime of Arrival IATA Airport Code, such as '2018-03-04T21:46'."
+          required: true
+          type: "string"
+          format: "yyyy-MM-ddTHH:mm"
+        - in: "header"
+          name: "X-MIN-DIFF-IN-HOURS-ARRIVAL-NEXT-DEPARTURE"
+          description: "Minimum Difference (in hours) between time of first arrival and time of the second departure."
+          required: false
+          type: "integer"
+          format: "int32"
+        - in: "header"
+          name: "X-LIMIT-RECORDS-PER-PAGE"
+          description: "Maximum records displayed in one call."
+          required: false
+          type: "integer"
+          format: "int32"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/TravelResponse'
+        206:
+          description: "OK with Partial Content"
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/TravelResponse'
+        400:
+          description: "Invalid Parameters"
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: "Not Found"
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: "Internal Server Error"
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  TravelResponse:
+    type: "object"
+    properties:
+      stops:
+        type: "integer"
+        example: "1"
+      legs:
+        type: "array"
+        items:
+          $ref: "#/definitions/Leg"
+  Leg:
+    type: "object"
+    properties:
+      departureAirport:
+        type: "string"
+        description: "IATA Airport Code for Departure Airport."
+      arrivalAirport:
+        type: "string"
+        description: "IATA Airport Code for Arrival Airport."
+      departureDateTime:
+        type: "string"
+        description: "Departure Time, specified in the local time of the Departure Airport."
+      arrivalDateTime:
+        type: "string"
+        description: "Arrival Time, specified in the local time of the Arrival Airport."
+  Error:
+    type: "object"
+    required:
+      - appName
+      - name
+      - status
+      - internalCode
+      - shortMessage
+      - timestamp
+    properties:
+      appName:
+        description: "App Name."
+        type: "string"
+      name:
+        description: "Route Planner internal error name"
+        type: "string"
+        example: "ERROR_NAME"
+      status:
+        description: "HTTP status code of the error response"
+        type: "integer"
+        format: "int32"
+        example: "000"
+      internalCode:
+        description: "Route Planner internal error code"
+        type: "integer"
+        format: "int32"
+        example: "0000"
+      shortMessage:
+        description: "Short error message"
+        type: "string"
+        example: "This is a short error message"
+      detailedMessage:
+        description: "Detailed error message"
+        type: "string"
+        example: "This is a detailed error message"
+      timestamp:
+        description: "A long value which represents offset in milliseconds from '01-01-1970'"
+        type: "integer"

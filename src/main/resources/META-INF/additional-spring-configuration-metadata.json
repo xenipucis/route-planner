@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "routePlanner.minimumDifferenceInHoursBetweenArrivalAndNextDeparture",
+      "type": "java.lang.String",
+      "description": "Description for routePlanner.minimumDifferenceInHoursBetweenArrivalAndNextDeparture."
+    },
+    {
+      "name": "routePlanner.limitRecordsPerPage",
+      "type": "java.lang.String",
+      "description": "Description for routePlanner.limitRecordsPerPage."
+    }
+  ] }
