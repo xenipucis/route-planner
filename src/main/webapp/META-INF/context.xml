@@ -9,9 +9,7 @@
 		one could place the external config files into Tomcat's shared/lib or common/lib 
 		folder? -->
 
-	<Resource name="jdbc/iREX" auth="Container" type="javax.sql.DataSource" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-		url="jdbc:sqlserver://AGL_REX_01.corp.grh.lab;databaseName=iREXST;integratedSecurity=true;sendStringParametersAsUnicode=false"  maxTotal="100" testOnBorrow="true"
-		validationQuery="SELECT 1" minIdle="10" initialSize="10"/>
+
 	<Environment name="spring.config.location"
 		value="file:${catalina.home}/conf/ers/application.yml" type="java.lang.String" />
 </Context>
