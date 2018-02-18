@@ -12,6 +12,7 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.MessageFormat;
@@ -38,7 +39,15 @@ public class ClientRestServices {
             backoff = @Backoff(delay = 5000))
     public List<Route> callRoutesService() {
         LOGGER.debug("Start call to {}.", ROUTES_URI);
-        final ResponseEntity<List> response = restTemplate.getForEntity(ROUTES_URI, List.class);
+        final ResponseEntity<List> response;
+
+        try {
+            response = restTemplate.getForEntity(ROUTES_URI, List.class);
+        } catch (RestClientException restClientException) {
+            LOGGER.error("Exception when calling REST services, message = {}, cause = {}, exception = {}"
+                    , restClientException.getMessage(), restClientException.getCause(), restClientException);
+            throw restClientException;
+        }
 
         LOGGER.debug("Call to {} was completed successfully.", ROUTES_URI);
         return new ObjectMapper().convertValue(response
@@ -54,7 +63,14 @@ public class ClientRestServices {
     public MonthlySchedule callScheduleService(final String departure, final String arrival, final String year, final String month) {
         final String monthlyScheduleComputedUri = MessageFormat.format(MONTHLY_SCHEDULE_URI, departure, arrival, year, month);
         LOGGER.debug("Start call to {}.", monthlyScheduleComputedUri);
-        final ResponseEntity<MonthlySchedule> response = restTemplate.getForEntity(monthlyScheduleComputedUri, MonthlySchedule.class);
+        final ResponseEntity<MonthlySchedule> response;
+        try {
+            response = restTemplate.getForEntity(monthlyScheduleComputedUri, MonthlySchedule.class);
+        } catch (RestClientException restClientException) {
+            LOGGER.error("Exception when calling REST services, message = {}, cause = {}, exception = {}"
+                    , restClientException.getMessage(), restClientException.getCause(), restClientException);
+            throw restClientException;
+        }
         LOGGER.debug("Call to {} was completed successfully.", monthlyScheduleComputedUri);
         return response.getBody();
     }

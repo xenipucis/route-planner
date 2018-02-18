@@ -57,16 +57,29 @@ public class RoutePlannerController implements RoutePlannerApi {
         final LocalDateTime departureTime = routePlannerService.getLocalDateTimeFromString(departureDateTime, ErrorType.DEPARTURE_TIME_INVALID_FORMAT);
         final LocalDateTime arrivalTime = routePlannerService.getLocalDateTimeFromString(arrivalDateTime, ErrorType.ARRIVAL_TIME_INVALID_FORMAT);
 
-        if (departureTime.isAfter(arrivalTime)) {
-            throw new CustomException(errorManager.getError(ErrorType.DEPARTURE_TIME_AFTER_ARRIVAL_TIME));
+        final LocalDateTime departureTimeUtc = routePlannerPropertiesConfiguration.computeUtcLocalTime(departure, departureTime);
+        final LocalDateTime arrivalTimeUtc = routePlannerPropertiesConfiguration.computeUtcLocalTime(arrival, arrivalTime);
+
+        if (departureTimeUtc.isAfter(arrivalTimeUtc)) {
+            LOGGER.error("Departure Date Time in Utc is before Arrival Date Time in Utc: departure = {}, arrival = {}, " +
+                    "departureDateTime = {}, arrivalDateTime = {}, departureDateTimeUtc = {}, arrivalDateTimeUtc = {}.",
+                    departure
+                    , arrival
+                    , departureDateTime
+                    , arrivalDateTime
+                    , departureTimeUtc
+                    , arrivalTimeUtc);
+            throw new CustomException(errorManager.getError(ErrorType.DEPARTURE_TIME_UTC_AFTER_ARRIVAL_TIME_UTC));
         }
 
         final Set<String> allIataAirportsCodes = routePlannerPropertiesConfiguration.getAllAirportIATACodes();
         if (!allIataAirportsCodes.contains(departure)) {
+            LOGGER.error("Departure is not specified as an IATA Code: departure = {}", departure);
             throw new CustomException(errorManager.getError(ErrorType.DEPARTURE_NOT_IATA_CODE));
         }
 
         if (!allIataAirportsCodes.contains(arrival)) {
+            LOGGER.error("Arrival is not specified as an IATA Code: arrival = {}", arrival);
             throw new CustomException(errorManager.getError(ErrorType.ARRIVAL_NOT_IATA_CODE));
         }
 

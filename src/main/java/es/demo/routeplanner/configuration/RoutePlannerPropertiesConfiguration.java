@@ -1,9 +1,6 @@
 package es.demo.routeplanner.configuration;
 
 import es.demo.routeplanner.logic.ErrorManager;
-import es.demo.routeplanner.model.CustomException;
-import es.demo.routeplanner.model.ErrorType;
-import org.apache.logging.slf4j.Log4jLoggerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
