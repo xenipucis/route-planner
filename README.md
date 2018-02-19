@@ -86,13 +86,15 @@
         * validations of departureDateTime, arrivalDateTime, against their format and against the possibility that an 
         arrivalDateTime in Utc could be before departureDateTime in Utc
        
-      The application is having a way of dealing with Custom and Generic errors.
+    - The application is having a way of dealing with Custom and Generic errors.
       
-      The application is able to do retries for a number of 5 attempts when a call of the external REST services is 
+    - The application is able to do retries for a number of 5 attempts when a call of the external REST services is 
       failing.
       
-      The application is generating useful logs.  
+    - The application is generating useful logs.  
       
-      The application is using Swagger to document its REST Api. 
-          
+    - The application is using Swagger to document its REST Api. 
+      
+    - I've added some simple Spock Tests. Also, you can see a report of their execution at the following path:
+      "${project.home}/build/spock-reports/index.html".
           
