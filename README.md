@@ -2,8 +2,8 @@
 
 ## Description 
 
-        This project is an implementation of a RESTful API application which serves information about possible direct and 
-    interconnected flights (maximum 1 stop) based on the data consumed from external APIs.
+        This project is an implementation of a RESTful API application which serves information about possible direct 
+    andinterconnected flights (maximum 1 stop) based on the data consumed from external APIs.
     
 ## Installation and execution
 
@@ -20,12 +20,18 @@
         * To build the project, execute "mvn clean install" in the ${project.home}.
         
         * To run the project as a SpringBoot Application, execute "mvn spring-boot:run" in the ${project.home}. 
-        Then, point to: "http://127.0.0.1:8080/routeplanner/api/v1/", where Swagger UI will be loaded and will offer the
-        possibility to call the REST Api.
+        Then, point to: "http://127.0.0.1:8080/routeplanner/api/v1/", where Swagger UI will be loaded and will offer
+        the possibility to call the REST Api.
     
 ## Issues:
-    I've had issues with deploying and starting the WAR's application in Tomcat, so probably, at least this part is 
-    missing from my implementation.
+        If I'm trying to deploy the WAR from IntelliJ IDE, the application is starting Swagger with the expected 
+    context path (e.g. routeplanner/api/v1/), so Swagger will be loaded by the following URI:
+    "http://127.0.0.1:8080/routeplanner/api/v1/".
+        But if I'm copying manually the WAR inside Tomcat's webapps/ folder, the app will start with "/" context path,
+    so the Swagger will be loaded by this URI: "http://127.0.0.1:8080/". Further, the /interconnections GET request 
+    will not be solved in Swagger, because Swagger is configured with "routeplanner/api/v1/", so it will fail with 
+    a 404 Resource Not Found Error. 
+     
 
 ## Words about implementation
 
@@ -69,8 +75,8 @@
        and arrival ( if any, i.e. the Integer value of the key in map is 4 ) and the 1-stop flights between departure 
        arrival ( if any, i.e. there are keys in map that have associated 3 as a value )...
        
-       6. ... The two situations are using the same method, which it will use conversion in utc of arrival and departure
-       date times, using information from iata.tzmap file, in order to apply 
+       6. ... The two situations are using the same method, which it will use conversion in utc of arrival and 
+       departure date times, using information from iata.tzmap file, in order to apply 
        minimumDifferenceInHoursBetweenArrivalAndNextDeparture restriction. 
             Then, the second URI is called, for every key in map that has 3(1-stop travels), or 4(0-stop travels). I've 
        decided to use a limitRecordsPerPage for limiting the records, because the external REST service after X calls 
@@ -78,8 +84,8 @@
             At every step when information is available, it will be filtered with various filters ...
             
        7. ... The aim of our call is to gather limitRecordsPerPage records, so, when we can be sure that this limit was
-       passed, the method will return with a number of records, possible greater than limitRecordsPerPage, in which case
-       in the response body will be displayed only the first limitRecordsPerPage records.
+       passed, the method will return with a number of records, possible greater than limitRecordsPerPage, in which 
+       case in the response body will be displayed only the first limitRecordsPerPage records.
        
     - The application is validating the input:
         * validations for IATA Airport Codes of departure, arrival, according with the information from iata.tzmap file
