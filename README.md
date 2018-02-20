@@ -29,7 +29,8 @@
     "http://127.0.0.1:8080/routeplanner/api/v1/".
         But if I'm copying manually the WAR inside Tomcat's webapps/ folder, the app will start with "/" 
     context path, so Swagger will be loaded by this URI: "http://127.0.0.1:8080/". Further, 
-    the /interconnections GET request will not be solved in Swagger, because Swagger is configured with         "routeplanner/api/v1/", so it will fail with a 404 Resource Not Found Error. 
+    the /interconnections GET request will not be solved in Swagger, because Swagger is configured with
+    "routeplanner/api/v1/", so it will fail with a 404 Resource Not Found Error.
      
 
 ## Words about implementation
