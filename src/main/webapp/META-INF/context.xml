@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<Context>
+<Context antiJARLocking="true" path="/routeplanner/api/v1">
 
 	<!-- Operators can override the configuration settings (which are currently 
 		set by configuration files on the classpath) by placing an application.yml, 
@@ -10,7 +10,9 @@
 		folder? -->
 
 
+
+
 	<Environment name="spring.config.location"
-		value="file:${catalina.home}/conf/rp/application.yml" type="java.lang.String" />
+		value="file:${catalina.home}/conf/RPS/application.yml" type="java.lang.String" />
 </Context>
 

@@ -6,7 +6,7 @@
             <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n" />
         </Console>
         <!-- File Appender -->
-        <File name="File" fileName="d:/app.log">
+        <File name="File" fileName="${catalina.home}/logs/RPS/RoutePlannerService.log">
             <PatternLayout pattern="%d{yyyy-MMM-dd HH:mm:ss a} [%t] %-5level %logger{36} - %msg%n" />
         </File>
     </Appenders>
@@ -50,6 +50,12 @@
 
         <!-- Log info in Spring AOP -->
         <Logger name="org.springframework.aop" level="info" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Logger>
+
+        <!-- Log info in Spring Jndi -->
+        <Logger name="org.springframework.jndi" level="info" additivity="false">
             <AppenderRef ref="Console" />
             <AppenderRef ref="File" />
         </Logger>
